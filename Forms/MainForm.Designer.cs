@@ -1,4 +1,4 @@
-﻿namespace MiniVIsionInspector
+﻿namespace MiniVisionInspector
 {
     partial class MainForm
     {

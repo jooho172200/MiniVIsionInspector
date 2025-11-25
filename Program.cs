@@ -1,4 +1,4 @@
-namespace MiniVIsionInspector
+namespace MiniVisionInspector
 {
     internal static class Program
     {
