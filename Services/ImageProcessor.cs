@@ -103,6 +103,47 @@ namespace MiniVisionInspector.Services
             if (v > 255) v = 255;
             return (int)v;
         }
+
+        public static Bitmap Blur(Bitmap src)
+        {
+            var dst = new Bitmap(src.Width, src.Height);
+
+            int width = src.Width;
+            int height = src.Height;
+
+            for(int y = 0; y < height; y++)
+            {
+                for(int x = 0; x < width; x++)
+                {
+                    if(x == 0 || y==0 || x == width-1 || y == height - 1)
+                    {
+                        dst.SetPixel(x, y, src.GetPixel(x, y));
+                        continue;
+                    }
+
+                    int sumR = 0, sumG = 0, sumB = 0;
+
+                    for(int j= -1; j <= 1; j++)
+                    {
+                        for(int i = -1; i <= 1; i++)
+                        {
+                            Color c = src.GetPixel(x+i, y+j);
+                            sumR += c.R;
+                            sumG += c.G;
+                            sumB += c.B;
+                        }
+                    }
+
+                    int r = sumR / 9;
+                    int g = sumG / 9;
+                    int b = sumB / 9;
+
+                    dst.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+
+            return dst;
+        }
     }
 
 }

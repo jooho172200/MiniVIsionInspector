@@ -326,7 +326,7 @@ namespace MiniVisionInspector
 
         private void btnUndo_Click(object sender, EventArgs e)
         {
-            if(_history.Count == 0)
+            if (_history.Count == 0)
             {
                 toolStripStatusLabelInfo.Text = "되돌릴 작업이 없습니다";
                 return;
@@ -337,6 +337,24 @@ namespace MiniVisionInspector
 
             pictureBoxProcessed.Image = _currentImage;
             toolStripStatusLabelInfo.Text = "Undo 완료";
+        }
+
+        private void btnBlur_Click(object sender, EventArgs e)
+        {
+            if (_currentImage is null)
+            {
+                toolStripStatusLabelInfo.Text = "이미지를 먼저 열어주세요.";
+                return;
+            }
+
+            PushHistory();
+
+            var src = _currentImage;
+            _currentImage = ImageProcessor.Blur(src);
+            src.Dispose();
+
+            pictureBoxProcessed.Image = _currentImage;
+            toolStripStatusLabelInfo.Text = "3x3  평균 블러 적용 완료";
         }
     }
 }

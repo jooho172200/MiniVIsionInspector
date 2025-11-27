@@ -41,6 +41,7 @@
             statusStrip1 = new StatusStrip();
             toolStripStatusLabelInfo = new ToolStripStatusLabel();
             pictureBoxProcessed = new PictureBox();
+            btnBlur = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxOriginal).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -51,6 +52,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(224, 224, 224);
+            panel1.Controls.Add(btnBlur);
             panel1.Controls.Add(btnUndo);
             panel1.Controls.Add(btnBrightnessContrast);
             panel1.Controls.Add(btnSave);
@@ -184,6 +186,16 @@
             pictureBoxProcessed.TabStop = false;
             pictureBoxProcessed.MouseMove += pictureBoxProcessed_MouseMove;
             // 
+            // btnBlur
+            // 
+            btnBlur.Location = new Point(666, 6);
+            btnBlur.Name = "btnBlur";
+            btnBlur.Size = new Size(75, 23);
+            btnBlur.TabIndex = 7;
+            btnBlur.Text = "Blur";
+            btnBlur.UseVisualStyleBackColor = true;
+            btnBlur.Click += btnBlur_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -221,5 +233,6 @@
         private Button btnSave;
         private Button btnBrightnessContrast;
         private Button btnUndo;
+        private Button btnBlur;
     }
 }
