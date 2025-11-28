@@ -18,15 +18,40 @@ namespace MiniVisionInspector
 
         private readonly Stack<Bitmap> _history = new Stack<Bitmap>();
 
+        // true  : 원본 이미지 표시
+        // false : 현재(_currentImage) 이미지 표시
+        private bool _showOriginal = false;
+
         public MainForm()
         {
             InitializeComponent();
             toolStripStatusLabelInfo.Text = "이미지를 Open 버튼으로 불러오세요.";
         }
 
+        /// <summary>
+        /// 현재 상태(_showOriginal)에 맞게 pictureBoxMain에 이미지 표시
+        /// </summary>
+        private void RefreshImage()
+        {
+            if (_originalImage is null)
+            {
+                pictureBoxMain.Image = null;
+                return;
+            }
+
+            if (_showOriginal)
+            {
+                pictureBoxMain.Image = _originalImage;
+            }
+            else
+            {
+                // 아직 가공된 이미지가 없다면 원본을 대신 보여줌
+                pictureBoxMain.Image = _currentImage ?? _originalImage;
+            }
+        }
+
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void btnOpen_Click(object sender, EventArgs e)
@@ -43,10 +68,10 @@ namespace MiniVisionInspector
                     _originalImage = new Bitmap(ofd.FileName);
                     _currentImage = (Bitmap)_originalImage.Clone();
 
-                    pictureBoxOriginal.Image = _originalImage;
-                    pictureBoxProcessed.Image = _currentImage;
-
                     ClearHistory();
+                    _showOriginal = false;   // 기본은 가공 이미지 모드
+
+                    RefreshImage();
 
                     toolStripStatusLabelInfo.Text = $"이미지 로드: {ofd.FileName}";
                 }
@@ -61,11 +86,11 @@ namespace MiniVisionInspector
                 return;
             }
 
-            //ClearHistory();
-
             _currentImage?.Dispose();
             _currentImage = (Bitmap)_originalImage.Clone();
-            pictureBoxProcessed.Image = _currentImage;
+            _showOriginal = false;
+
+            RefreshImage();
 
             toolStripStatusLabelInfo.Text = "변경 사항 폐기 완료";
         }
@@ -84,7 +109,9 @@ namespace MiniVisionInspector
             _currentImage = ImageProcessor.ToGrayScale(src);
             src.Dispose();
 
-            pictureBoxProcessed.Image = _currentImage;
+            _showOriginal = false;
+            RefreshImage();
+
             toolStripStatusLabelInfo.Text = "그레이스케일 변환 완료";
         }
 
@@ -118,93 +145,45 @@ namespace MiniVisionInspector
                 _currentImage = ImageProcessor.Threshold(src, th, invert);
                 src.Dispose();
 
-                pictureBoxProcessed.Image = _currentImage;
+                _showOriginal = false;
+                RefreshImage();
+
                 toolStripStatusLabelInfo.Text = $"이진화(threshold = {th}) 완료";
             }
         }
 
-        private void pictureBoxOriginal_Click(object sender, EventArgs e)
+        // 사진창 위에서 마우스 움직일 때 좌표와 RGB 값 표시용
+        private void pictureBoxMain_MouseMove(object sender, MouseEventArgs e)
         {
+            // 현재 보여주고 있는 이미지 선택
+            var img = _showOriginal ? _originalImage : _currentImage;
 
-        }
-
-        //사진창 위에서 마우스 움직일 때 좌표와 RGB 값 표시용
-        private void pictureBoxOriginal_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (_currentImage == null || pictureBoxProcessed.Image == null)
+            if (img == null || pictureBoxMain.Image == null)
             {
                 toolStripStatusLabelInfo.Text = "이미지를 먼저 열어주세요.";
                 return;
             }
 
-            var img = _currentImage;
-
-            //사진창과 이미지의 비율 계산
+            // 사진창과 이미지의 비율 계산
             float imgAspect = (float)img.Width / img.Height;
-            float boxAspect = (float)pictureBoxProcessed.Width / pictureBoxProcessed.Height;
+            float boxAspect = (float)pictureBoxMain.Width / pictureBoxMain.Height;
 
             int drawWidth, drawHeight;
             int offsetX, offsetY;
 
-            if (imgAspect > boxAspect)  //가로가 더 긴 경우
+            if (imgAspect > boxAspect)  // 가로가 더 긴 경우
             {
-                drawWidth = pictureBoxProcessed.Width;
-                drawHeight = (int)(pictureBoxProcessed.Width / imgAspect);
+                drawWidth = pictureBoxMain.Width;
+                drawHeight = (int)(pictureBoxMain.Width / imgAspect);
                 offsetX = 0;
-                offsetY = (pictureBoxProcessed.Height - drawHeight) / 2;
+                offsetY = (pictureBoxMain.Height - drawHeight) / 2;
             }
             else
             {
-                drawHeight = pictureBoxProcessed.Height;
-                drawWidth = (int)(pictureBoxProcessed.Height * imgAspect);
+                drawHeight = pictureBoxMain.Height;
+                drawWidth = (int)(pictureBoxMain.Height * imgAspect);
                 offsetY = 0;
-                offsetX = (pictureBoxProcessed.Width - drawWidth) / 2;
-            }
-
-            // 마우스 좌표 -> 이미지 좌표 변환
-            int x = (int)((e.X - offsetX) * (float)img.Width / drawWidth);
-            int y = (int)((e.Y - offsetY) * (float)img.Height / drawHeight);
-
-            // 이미지 영역 밖인 경우
-            if (x < 0 || y < 0 || x >= img.Width || y >= img.Height)
-            {
-                return;
-            }
-
-            Color c = img.GetPixel(x, y);
-            toolStripStatusLabelInfo.Text = $"X={x}, Y={y}       R={c.R}, G={c.G}, B={c.B}";
-        }
-
-        private void pictureBoxProcessed_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (_currentImage == null || pictureBoxProcessed.Image == null)
-            {
-                toolStripStatusLabelInfo.Text = "이미지를 먼저 열어주세요.";
-                return;
-            }
-
-            var img = _currentImage;
-
-            //사진창과 이미지의 비율 계산
-            float imgAspect = (float)img.Width / img.Height;
-            float boxAspect = (float)pictureBoxProcessed.Width / pictureBoxProcessed.Height;
-
-            int drawWidth, drawHeight;
-            int offsetX, offsetY;
-
-            if (imgAspect > boxAspect)  //가로가 더 긴 경우
-            {
-                drawWidth = pictureBoxProcessed.Width;
-                drawHeight = (int)(pictureBoxProcessed.Width / imgAspect);
-                offsetX = 0;
-                offsetY = (pictureBoxProcessed.Height - drawHeight) / 2;
-            }
-            else
-            {
-                drawHeight = pictureBoxProcessed.Height;
-                drawWidth = (int)(pictureBoxProcessed.Height * imgAspect);
-                offsetY = 0;
-                offsetX = (pictureBoxProcessed.Width - drawWidth) / 2;
+                offsetX = (pictureBoxMain.Width - drawWidth) / 2;
             }
 
             // 마우스 좌표 -> 이미지 좌표 변환
@@ -260,7 +239,6 @@ namespace MiniVisionInspector
 
                         _currentImage.Save(sfd.FileName, format);
                         toolStripStatusLabelInfo.Text = $"이미지 저장 완료: {sfd.FileName}";
-
                     }
                     catch (Exception)
                     {
@@ -302,7 +280,9 @@ namespace MiniVisionInspector
                 _currentImage = ImageProcessor.AdjustBrightnessContrast(src, b, c);
                 src.Dispose();
 
-                pictureBoxProcessed.Image = _currentImage;
+                _showOriginal = false;
+                RefreshImage();
+
                 toolStripStatusLabelInfo.Text = $"밝기={b}, 대비={c} 적용완료";
             }
         }
@@ -337,7 +317,9 @@ namespace MiniVisionInspector
             _currentImage?.Dispose();
             _currentImage = _history.Pop();
 
-            pictureBoxProcessed.Image = _currentImage;
+            _showOriginal = false;
+            RefreshImage();
+
             toolStripStatusLabelInfo.Text = "Undo 완료";
         }
 
@@ -355,7 +337,9 @@ namespace MiniVisionInspector
             _currentImage = ImageProcessor.Blur(src);
             src.Dispose();
 
-            pictureBoxProcessed.Image = _currentImage;
+            _showOriginal = false;
+            RefreshImage();
+
             toolStripStatusLabelInfo.Text = "3x3  평균 블러 적용 완료";
         }
 
@@ -373,9 +357,10 @@ namespace MiniVisionInspector
             _currentImage = ImageProcessor.Sharpen(src);
             src.Dispose();
 
-            pictureBoxProcessed.Image = _currentImage;
-            toolStripStatusLabelInfo.Text = "샤프닝 필터 적용 완료";
+            _showOriginal = false;
+            RefreshImage();
 
+            toolStripStatusLabelInfo.Text = "샤프닝 필터 적용 완료";
         }
 
         // OpenCV
@@ -393,7 +378,9 @@ namespace MiniVisionInspector
             _currentImage = ImageProcessor.Canny(src, 100, 200);
             src.Dispose();
 
-            pictureBoxProcessed.Image = _currentImage;
+            _showOriginal = false;
+            RefreshImage();
+
             toolStripStatusLabelInfo.Text = "Canny 엣지 검출 완료";
         }
     }

@@ -39,15 +39,13 @@
             btnGray = new Button();
             btnReset = new Button();
             btnOpen = new Button();
-            pictureBoxOriginal = new PictureBox();
+            pictureBoxMain = new PictureBox();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabelInfo = new ToolStripStatusLabel();
-            pictureBoxProcessed = new PictureBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxOriginal).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxMain).BeginInit();
             statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxProcessed).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -173,18 +171,17 @@
             btnOpen.UseVisualStyleBackColor = true;
             btnOpen.Click += btnOpen_Click;
             // 
-            // pictureBoxOriginal
+            // pictureBoxMain
             // 
-            pictureBoxOriginal.BorderStyle = BorderStyle.FixedSingle;
-            pictureBoxOriginal.Dock = DockStyle.Fill;
-            pictureBoxOriginal.Location = new Point(3, 3);
-            pictureBoxOriginal.Name = "pictureBoxOriginal";
-            pictureBoxOriginal.Size = new Size(588, 642);
-            pictureBoxOriginal.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBoxOriginal.TabIndex = 1;
-            pictureBoxOriginal.TabStop = false;
-            pictureBoxOriginal.Click += pictureBoxOriginal_Click;
-            pictureBoxOriginal.MouseMove += pictureBoxOriginal_MouseMove;
+            pictureBoxMain.BorderStyle = BorderStyle.FixedSingle;
+            pictureBoxMain.Dock = DockStyle.Fill;
+            pictureBoxMain.Location = new Point(3, 3);
+            pictureBoxMain.Name = "pictureBoxMain";
+            pictureBoxMain.Size = new Size(1182, 642);
+            pictureBoxMain.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxMain.TabIndex = 1;
+            pictureBoxMain.TabStop = false;
+            pictureBoxMain.MouseMove += pictureBoxMain_MouseMove;
             // 
             // statusStrip1
             // 
@@ -202,25 +199,12 @@
             toolStripStatusLabelInfo.Size = new Size(135, 17);
             toolStripStatusLabelInfo.Text = "toolStripStatusLabelInfo";
             // 
-            // pictureBoxProcessed
-            // 
-            pictureBoxProcessed.BorderStyle = BorderStyle.FixedSingle;
-            pictureBoxProcessed.Dock = DockStyle.Fill;
-            pictureBoxProcessed.Location = new Point(597, 3);
-            pictureBoxProcessed.Name = "pictureBoxProcessed";
-            pictureBoxProcessed.Size = new Size(588, 642);
-            pictureBoxProcessed.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBoxProcessed.TabIndex = 4;
-            pictureBoxProcessed.TabStop = false;
-            pictureBoxProcessed.MouseMove += pictureBoxProcessed_MouseMove;
-            // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(pictureBoxOriginal, 0, 0);
-            tableLayoutPanel1.Controls.Add(pictureBoxProcessed, 1, 0);
+            tableLayoutPanel1.Controls.Add(pictureBoxMain, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 32);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -240,10 +224,9 @@
             Name = "MainForm";
             Text = "Mini Vision Inspector";
             panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBoxOriginal).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxMain).EndInit();
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxProcessed).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -256,9 +239,8 @@
         private Button btnOpen;
         private Button btnThresh;
         private Button btnGray;
-        private PictureBox pictureBoxOriginal;
+        private PictureBox pictureBoxMain;
         private StatusStrip statusStrip1;
-        private PictureBox pictureBoxProcessed;
         private ToolStripStatusLabel toolStripStatusLabelInfo;
         private Button btnSave;
         private Button btnBrightnessContrast;
