@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            btnBlur = new Button();
             btnUndo = new Button();
             btnBrightnessContrast = new Button();
             btnSave = new Button();
@@ -41,7 +42,7 @@
             statusStrip1 = new StatusStrip();
             toolStripStatusLabelInfo = new ToolStripStatusLabel();
             pictureBoxProcessed = new PictureBox();
-            btnBlur = new Button();
+            btnSharpen = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxOriginal).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -52,6 +53,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(224, 224, 224);
+            panel1.Controls.Add(btnSharpen);
             panel1.Controls.Add(btnBlur);
             panel1.Controls.Add(btnUndo);
             panel1.Controls.Add(btnBrightnessContrast);
@@ -66,6 +68,16 @@
             panel1.Size = new Size(1132, 32);
             panel1.TabIndex = 0;
             panel1.Paint += panel1_Paint;
+            // 
+            // btnBlur
+            // 
+            btnBlur.Location = new Point(666, 6);
+            btnBlur.Name = "btnBlur";
+            btnBlur.Size = new Size(75, 23);
+            btnBlur.TabIndex = 7;
+            btnBlur.Text = "Blur";
+            btnBlur.UseVisualStyleBackColor = true;
+            btnBlur.Click += btnBlur_Click;
             // 
             // btnUndo
             // 
@@ -186,15 +198,15 @@
             pictureBoxProcessed.TabStop = false;
             pictureBoxProcessed.MouseMove += pictureBoxProcessed_MouseMove;
             // 
-            // btnBlur
+            // btnSharpen
             // 
-            btnBlur.Location = new Point(666, 6);
-            btnBlur.Name = "btnBlur";
-            btnBlur.Size = new Size(75, 23);
-            btnBlur.TabIndex = 7;
-            btnBlur.Text = "Blur";
-            btnBlur.UseVisualStyleBackColor = true;
-            btnBlur.Click += btnBlur_Click;
+            btnSharpen.Location = new Point(747, 6);
+            btnSharpen.Name = "btnSharpen";
+            btnSharpen.Size = new Size(75, 23);
+            btnSharpen.TabIndex = 8;
+            btnSharpen.Text = "Sharpen";
+            btnSharpen.UseVisualStyleBackColor = true;
+            btnSharpen.Click += btnSharpen_Click;
             // 
             // MainForm
             // 
@@ -234,5 +246,6 @@
         private Button btnBrightnessContrast;
         private Button btnUndo;
         private Button btnBlur;
+        private Button btnSharpen;
     }
 }

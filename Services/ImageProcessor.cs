@@ -144,6 +144,61 @@ namespace MiniVisionInspector.Services
 
             return dst;
         }
+
+        public static Bitmap Sharpen(Bitmap src)
+        {
+            var dst = new Bitmap(src.Width, src.Height);
+
+            int width = src.Width;
+            int height = src.Height;
+
+            for(int y = 0; y < height; y++)
+            {
+                for(int x = 0; x < width; x++)
+                {
+                    if(x == 0 || y == 0 || x == width - 1 || y == height - 1)
+                    {
+                        dst.SetPixel(x, y, src.GetPixel(x, y));
+                        continue;
+                    }
+
+                    double sumR = 0, sumG = 0, sumB = 0;
+
+                    for(int j = -1; j <= 1; j++)
+                    {
+                        for(int i=-1 ; i <= 1; i++)
+                        {
+                            Color c = src.GetPixel(x + i, y + j);
+                            int k = 0;
+
+                            if (i == 0 && j == 0) k = 5;
+                            else if (i == 0 || j == 0) k = -1;
+                            else k = 0;
+
+                            sumR += c.R * k;
+                            sumG += c.G * k;
+                            sumB += c.B * k;
+                        }
+
+                    }
+
+                    int r = (int)Math.Round(sumR);
+                    int g = (int)Math.Round(sumG);
+                    int b = (int)Math.Round(sumB);
+
+                    if (r < 0) r = 0; if (r > 255) r = 255;
+                    if (g < 0) g = 0; if (g > 255) g = 255;
+                    if (b < 0) b = 0; if (b > 255) b = 255;
+
+                    dst.SetPixel(x, y, Color.FromArgb(r, g, b));
+
+                }
+            }
+
+            return dst;
+        }
+
+
     }
 
 }

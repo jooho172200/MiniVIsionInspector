@@ -61,6 +61,8 @@ namespace MiniVisionInspector
                 return;
             }
 
+            //ClearHistory();
+
             _currentImage?.Dispose();
             _currentImage = (Bitmap)_originalImage.Clone();
             pictureBoxProcessed.Image = _currentImage;
@@ -355,6 +357,24 @@ namespace MiniVisionInspector
 
             pictureBoxProcessed.Image = _currentImage;
             toolStripStatusLabelInfo.Text = "3x3  평균 블러 적용 완료";
+        }
+
+        private void btnSharpen_Click(object sender, EventArgs e)
+        {
+            if (_currentImage is null)
+            {
+                toolStripStatusLabelInfo.Text = "이미지를 먼저 열어주세요";
+            }
+
+            PushHistory();
+
+            var src = _currentImage;
+            _currentImage= ImageProcessor.Sharpen(src);
+            src.Dispose();
+
+            pictureBoxProcessed.Image = _currentImage;
+            toolStripStatusLabelInfo.Text = "샤프닝 필터 적용 완료";
+
         }
     }
 }
